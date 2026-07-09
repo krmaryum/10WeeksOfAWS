@@ -1062,3 +1062,5 @@ Day 2 focuses on IAM security:
 The most important mindset is:
 
 **Secure first, practice hands-on, and always use least privilege.**
+
+[Day 1 and 2 MCQS](https://khalidkhan.me/mcqs/aws/aws-day-1-day-2-mcqs-quiz.html)

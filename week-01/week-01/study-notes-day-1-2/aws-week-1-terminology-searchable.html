@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AWS Week 1 Terminology Searchable Reference</title>
+<style>
+body {
+  margin:0; font-family:Arial,sans-serif; background:#0f172a; color:#e5e7eb; line-height:1.6;
+}
+header {
+  padding:28px 20px; text-align:center; border-bottom:1px solid #334155; background:#020617;
+}
+h1 { margin:0 0 8px; font-size:2rem; }
+header p, .summary, footer { color:#9ca3af; }
+.container { max-width:1200px; margin:0 auto; padding:22px; }
+.controls { display:grid; grid-template-columns:1fr 260px; gap:12px; margin-bottom:16px; }
+input, select {
+  width:100%; box-sizing:border-box; padding:13px; border-radius:10px; border:1px solid #64748b;
+  background:#111827; color:#e5e7eb; font-size:1rem;
+}
+table {
+  width:100%; border-collapse:collapse; background:#111827; border:1px solid #334155;
+  border-radius:12px; overflow:hidden;
+}
+th, td { padding:12px; border-bottom:1px solid #334155; text-align:left; vertical-align:top; }
+th { background:#020617; color:#38bdf8; position:sticky; top:0; }
+tr:hover { background:#1e293b; }
+.category {
+  display:inline-block; padding:4px 8px; border-radius:999px; background:#1e3a8a; color:#bfdbfe;
+  font-size:.85rem; white-space:nowrap;
+}
+.term { font-weight:700; color:#fff; }
+.no-results {
+  padding:18px; color:#facc15; background:#111827; border:1px solid #334155; border-radius:10px; margin-top:12px;
+}
+footer { margin-top:22px; border-top:1px solid #334155; padding-top:18px; }
+@media (max-width:800px) {
+.controls { grid-template-columns:1fr; }
+table, thead, tbody, th, td, tr { display:block; }
+thead { display:none; }
+tr { border-bottom:1px solid #334155; padding:10px; }
+td { border-bottom:none; padding:7px 0; }
+td::before { content:attr(data-label); display:block; color:#38bdf8; font-weight:bold; margin-bottom:2px; }
+}
+</style>
+</head>
+<body>
+<header>
+<h1>AWS Week 1 Terminology Searchable Reference</h1>
+<p>Searchable glossary for IAM, STS, ARN, OIDC, S3, GitHub Actions, and AWS Week 1 labs.</p>
+</header>
+<main class="container">
+<div class="controls">
+<input id="searchInput" type="text" placeholder="Search term, meaning, example... e.g. STS, ARN, OIDC, S3" />
+<select id="categoryFilter"><option value="All">All Categories</option></select>
+</div>
+<div class="summary">Showing <span id="count">0</span> terms. Tip: use the search box to filter instantly.</div>
+<table>
+<thead><tr><th>Category</th><th>Term</th><th>Stands For</th><th>Simple Meaning</th><th>Example / Where Used</th></tr></thead>
+<tbody id="tableBody"></tbody>
+</table>
+<div id="noResults" class="no-results" style="display:none;">No matching terms found.</div>
+<footer>
+<p><strong>Week 1 Summary:</strong> AWS account security, IAM users/groups/roles, policies, S3/EC2/Billing read-only access, STS temporary credentials, and GitHub OIDC secure access without long-lived keys.</p>
+<p>Alhamdulillah, Week 1 is completed.</p>
+</footer>
+</main>
+<script>
+const terms = [["AWS Account & Security", "AWS", "Amazon Web Services", "Cloud platform used to create and manage cloud resources", "EC2, S3, IAM, Billing"], ["AWS Account & Security", "Root User", "Main AWS account owner", "Full access to everything in the AWS account", "Used for account setup, MFA, billing access"], ["AWS Account & Security", "MFA", "Multi-Factor Authentication", "Extra security step after password", "Enabled MFA for root account"], ["AWS Account & Security", "Billing", "AWS Billing and Cost Management", "Shows AWS usage, charges, budgets, and cost alerts", "Created budget alert and billing view lab"], ["AWS Account & Security", "Budget", "AWS Budget", "Helps monitor AWS spending", "Created budget alert to avoid unexpected charges"], ["IAM Basics", "IAM", "Identity and Access Management", "AWS service for managing users, groups, roles, and permissions", "Used in all Week 1 labs"], ["IAM Basics", "IAM User", "Identity and Access Management User", "Identity for login or programmatic access", "learner-s3, learner-ec2, learner-billing"], ["IAM Basics", "IAM Group", "Identity and Access Management Group", "Collection of IAM users", "S3ReadOnlyGroup, BillingViewGroup"], ["IAM Basics", "IAM Role", "Identity and Access Management Role", "Temporary permission identity", "TrainingReadOnlyRole, GitHub OIDC role"], ["IAM Basics", "Principal", "Principal", "Who is requesting access", "User, role, service, or federated identity"], ["IAM Policies", "Policy", "Policy document", "Permission document that defines allowed or denied actions", "S3, EC2, Billing, role policies"], ["IAM Policies", "AWS Managed Policy", "AWS managed policy", "Policy created and managed by AWS", "ReadOnlyAccess, AmazonS3ReadOnlyAccess"], ["IAM Policies", "Customer Managed Policy", "Customer managed policy", "Policy created by you", "CustomS3ReadOnlyTrainingPolicy"], ["IAM Policies", "JSON", "JavaScript Object Notation", "Format used for IAM policies", "Version, Statement, Action, Resource"], ["IAM Policies", "Statement", "Statement block", "IAM policy rule block", "Used inside JSON policies"], ["IAM Policies", "Effect", "Effect", "Allow or Deny decision", "Effect: Allow"], ["IAM Policies", "Action", "Action", "AWS API operation", "s3:GetObject, sts:AssumeRole"], ["IAM Policies", "Resource", "Resource", "AWS resource where permission applies", "arn:aws:s3:::bucket-name"], ["IAM Policies", "ARN", "Amazon Resource Name", "Unique address/name of an AWS resource", "arn:aws:s3:::bucket-name, arn:aws:iam::ACCOUNT-ID:role/RoleName"], ["IAM Policies", "Least Privilege", "Least privilege", "Give only required permissions", "Read-only policies instead of admin access"], ["S3 Terms", "S3", "Simple Storage Service", "AWS object storage service", "S3 read-only labs"], ["S3 Terms", "Bucket", "Bucket", "S3 container that holds objects/files", "ali-s3-t1, user-s3-t-d"], ["S3 Terms", "Object", "Object", "File/data stored in a bucket", "notes.pdf, image.png, folder/file.txt"], ["S3 Terms", "Object Key", "Object key", "Object name/path inside S3", "folder1/file1.txt"], ["S3 Terms", "Prefix", "Prefix", "Folder-like part of an object key", "folder1/ in folder1/file1.txt"], ["S3 Terms", "Bucket ARN", "Amazon Resource Name for bucket", "ARN for bucket itself", "arn:aws:s3:::bucket-name"], ["S3 Terms", "Object ARN", "Amazon Resource Name for objects", "ARN for objects inside bucket", "arn:aws:s3:::bucket-name/*"], ["EC2 & Billing", "EC2", "Elastic Compute Cloud", "Virtual server in AWS", "EC2 read-only lab"], ["EC2 & Billing", "Instance", "EC2 instance", "A running or stopped virtual server", "View EC2 instances"], ["EC2 & Billing", "AmazonEC2ReadOnlyAccess", "AWS managed policy", "Allows viewing EC2 resources", "EC2 read-only lab"], ["EC2 & Billing", "AWSBillingReadOnlyAccess", "AWS managed policy", "Allows viewing billing information", "BillingViewGroup lab"], ["EC2 & Billing", "Billing Dashboard", "Billing Dashboard", "AWS page for cost and usage information", "Billing view access lab"], ["Role, STS & Temporary Access", "STS", "Security Token Service", "AWS service that provides temporary credentials", "Switch Role and GitHub OIDC"], ["Role, STS & Temporary Access", "Temporary Credentials", "Temporary credentials", "Short-lived AWS credentials", "Created by STS"], ["Role, STS & Temporary Access", "AssumeRole", "Assume Role", "Allows a user or service to assume an IAM role", "sts:AssumeRole"], ["Role, STS & Temporary Access", "Switch Role", "Switch Role", "IAM user temporarily uses role permissions", "TrainingReadOnlyRole"], ["Role, STS & Temporary Access", "Trust Policy", "Trust policy", "Defines who can assume a role", "Role trust relationship"], ["Role, STS & Temporary Access", "Permissions Policy", "Permissions policy", "Defines what can be done after access is granted", "ReadOnlyAccess attached to role"], ["Role, STS & Temporary Access", "ReadOnlyAccess", "ReadOnlyAccess", "AWS managed read-only policy", "TrainingReadOnlyRole"], ["GitHub OIDC", "OIDC", "OpenID Connect", "Identity system used to prove identity", "GitHub Actions to AWS authentication"], ["GitHub OIDC", "OIDC Token", "OpenID Connect Token", "Short-lived identity token", "GitHub Actions proves identity to AWS"], ["GitHub OIDC", "IAM OIDC Provider", "IAM OpenID Connect Provider", "Allows AWS to trust GitHub OIDC tokens", "token.actions.githubusercontent.com"], ["GitHub OIDC", "Audience", "Audience", "Token target", "sts.amazonaws.com"], ["GitHub OIDC", "Subject", "Subject", "Repo or branch identity inside token", "repo:username/repo:*"], ["GitHub OIDC", "AssumeRoleWithWebIdentity", "Assume Role With Web Identity", "STS action used with OIDC token", "GitHub Actions assumed AWS role"], ["GitHub OIDC", "Federated Principal", "Federated principal", "External identity provider trusted by AWS", "GitHub OIDC provider in trust policy"], ["GitHub Actions", "GitHub Actions", "GitHub Actions", "GitHub CI/CD service", "AWS OIDC workflow"], ["GitHub Actions", "Workflow", "Workflow", "Automation YAML file", "aws-oidc-challenge.yml"], ["GitHub Actions", "Job", "Job", "Group of workflow steps", "aws-oidc-challenge job"], ["GitHub Actions", "Step", "Step", "Single workflow task", "Checkout, configure credentials, AWS CLI"], ["GitHub Actions", "Runner", "Runner", "Machine running workflow", "ubuntu-latest"], ["GitHub Actions", "workflow_dispatch", "workflow dispatch", "Manual workflow trigger", "Run workflow button"], ["GitHub Actions", "id-token: write", "id-token permission", "Allows workflow to request OIDC token", "Required for OIDC"], ["GitHub Actions", "contents: read", "contents permission", "Allows workflow to read repo contents", "Required for checkout"], ["GitHub Actions", "configure-aws-credentials", "AWS credentials GitHub Action", "Configures AWS temporary credentials", "aws-actions/configure-aws-credentials@v4"], ["Errors & Security", "AccessDenied", "Access denied", "AWS permission error", "User or role does not have permission"], ["Errors & Security", "Not Authorized", "Not authorized", "Permission denied message", "Denied action testing"], ["Errors & Security", "Long-Lived Access Keys", "Long-lived access keys", "Permanent AWS access keys", "Avoid storing in GitHub Secrets"], ["Errors & Security", "Temporary Access", "Temporary access", "Short-term access", "Safer than permanent credentials"], ["Errors & Security", "Denied Action", "Denied action", "Action intentionally blocked", "Upload/delete denied in read-only labs"], ["Errors & Security", "Allowed Action", "Allowed action", "Action permitted by policy", "Read/list actions allowed"], ["Errors & Security", "Public Screenshot Risk", "Screenshot security risk", "Sensitive info exposed in screenshots", "Crop account ID, root email, keys"], ["Errors & Security", "Least Privilege Testing", "Least privilege testing", "Test allowed and denied actions", "Confirms policy is working correctly"]];
+const tableBody = document.getElementById("tableBody");
+const searchInput = document.getElementById("searchInput");
+const categoryFilter = document.getElementById("categoryFilter");
+const count = document.getElementById("count");
+const noResults = document.getElementById("noResults");
+
+const categories = ["All", ...new Set(terms.map(item => item[0]))];
+categories.forEach(category => {
+  const option = document.createElement("option");
+  option.value = category;
+  option.textContent = category;
+  categoryFilter.appendChild(option);
+});
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, function(char) {
+    return {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    }[char];
+  });
+}
+
+function render() {
+  const query = searchInput.value.toLowerCase().trim();
+  const selectedCategory = categoryFilter.value;
+
+  const filtered = terms.filter(item => {
+    const combined = item.join(" ").toLowerCase();
+    const matchesSearch = combined.includes(query);
+    const matchesCategory = selectedCategory === "All" || item[0] === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
+
+  tableBody.innerHTML = "";
+  filtered.forEach(item => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td data-label="Category"><span class="category">${escapeHtml(item[0])}</span></td>
+      <td data-label="Term"><span class="term">${escapeHtml(item[1])}</span></td>
+      <td data-label="Stands For">${escapeHtml(item[2])}</td>
+      <td data-label="Simple Meaning">${escapeHtml(item[3])}</td>
+      <td data-label="Example / Where Used">${escapeHtml(item[4])}</td>
+    `;
+    tableBody.appendChild(row);
+  });
+
+  count.textContent = filtered.length;
+  noResults.style.display = filtered.length === 0 ? "block" : "none";
+}
+
+searchInput.addEventListener("input", render);
+categoryFilter.addEventListener("change", render);
+render();
+</script>
+</body>
+</html>
