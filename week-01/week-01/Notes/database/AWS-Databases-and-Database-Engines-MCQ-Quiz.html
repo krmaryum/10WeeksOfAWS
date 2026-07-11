@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AWS Databases & Database Engines MCQ Quiz</title>
+<style>
+:root{
+  --bg:#071426;--panel:#102743;--panel2:#183a5d;--text:#eef7ff;
+  --muted:#bdd0e3;--yellow:#ffd43b;--blue:#4ba3ff;--green:#37d67a;
+  --red:#ff5d6c;--purple:#9d6cff;--teal:#27c7c9;--border:#31587d
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:Arial,Segoe UI,sans-serif;
+  background:
+    radial-gradient(circle at top left,rgba(75,163,255,.15),transparent 28%),
+    linear-gradient(135deg,#06101f,#0c2948);
+  color:var(--text)
+}
+.wrap{max-width:1000px;margin:auto;padding:24px}
+.hero,.card,.result,.review-box{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:22px;
+  margin-bottom:18px;
+  box-shadow:0 10px 30px rgba(0,0,0,.24)
+}
+.hero{
+  background:linear-gradient(135deg,#123f72,#43236f);
+  position:relative;
+  overflow:hidden
+}
+.hero:after{
+  content:"";
+  position:absolute;
+  right:-60px;top:-60px;
+  width:210px;height:210px;border-radius:50%;
+  background:rgba(39,199,201,.13)
+}
+h1{margin:0 0 8px;font-size:clamp(28px,4vw,44px)}
+.subtitle{color:#d8ecff;margin:6px 0}
+.badge{
+  display:inline-block;background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:999px;padding:7px 12px;margin-top:8px;font-weight:700
+}
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin:16px 0
+}
+.stat{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px;
+  text-align:center
+}
+.stat b{display:block;font-size:22px;color:var(--yellow)}
+.progressbar{
+  height:13px;background:#05101e;border-radius:999px;
+  overflow:hidden;border:1px solid #203d5c;margin-bottom:14px
+}
+.progress{
+  height:100%;width:0;
+  background:linear-gradient(90deg,var(--blue),var(--teal),var(--green));
+  transition:.25s
+}
+.controls{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 18px}
+button{
+  padding:12px 16px;border:0;border-radius:10px;font-weight:700;
+  cursor:pointer;transition:.18s;font-size:15px
+}
+button:hover{transform:translateY(-1px);filter:brightness(1.06)}
+.primary{background:var(--yellow);color:#171717}
+.secondary{background:var(--blue);color:#fff}
+.danger{background:var(--red);color:#fff}
+.tertiary{background:var(--purple);color:#fff}
+.qnum{color:var(--yellow);font-weight:700}
+.q{font-size:19px;font-weight:700;margin:8px 0 14px;line-height:1.45}
+.opt{
+  display:block;background:var(--panel2);border:2px solid transparent;
+  border-radius:11px;padding:12px;margin:9px 0;cursor:pointer;
+  transition:.18s;line-height:1.35
+}
+.opt:hover{border-color:var(--blue);transform:translateX(2px)}
+.opt input{margin-right:9px;transform:scale(1.08)}
+.correct{border-color:var(--green)!important;background:#173f36!important}
+.wrong{border-color:var(--red)!important;background:#482638!important}
+.unanswered{border-color:var(--yellow)!important}
+.exp{
+  display:none;background:#091b31;border-left:4px solid var(--purple);
+  padding:12px;margin-top:11px;border-radius:8px;line-height:1.5
+}
+.result{display:none;text-align:center}
+.result h2{font-size:34px;margin-bottom:8px}
+.grade{font-size:20px;font-weight:700;color:var(--yellow)}
+.review-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px
+}
+.review-item{
+  padding:10px;border-radius:10px;background:#0a1d34;border:1px solid var(--border)
+}
+.footer{text-align:center;color:var(--muted);padding:24px;line-height:1.6}
+.small{font-size:13px;color:var(--muted)}
+.hidden{display:none}
+@media(max-width:650px){
+  .stats,.review-grid{grid-template-columns:repeat(2,1fr)}
+  .wrap{padding:14px}
+  .card,.hero,.result{padding:17px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <h1>AWS Databases & Database Engines Quiz</h1>
+    <p class="subtitle"><strong>Study Poster Quiz</strong> — RDS, Aurora, DynamoDB, database engines, NoSQL, caching, analytics, and purpose-built AWS databases</p>
+    <p class="subtitle">25 questions • 15-minute timer • instant review • detailed explanations • shuffled reattempts</p>
+    <span class="badge">From Scratch to Hero</span>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><b id="timer">15:00</b>Time Left</div>
+    <div class="stat"><b id="answered">0/25</b>Answered</div>
+    <div class="stat"><b id="scoreLive">0</b>Score</div>
+    <div class="stat"><b id="attempt">1</b>Attempt</div>
+  </div>
+
+  <div class="progressbar"><div class="progress" id="progress"></div></div>
+
+  <div class="controls">
+    <button class="primary" onclick="submitQuiz()">Submit Quiz</button>
+    <button class="secondary" onclick="reattemptQuiz()">Reattempt & Shuffle</button>
+    <button class="danger" onclick="clearAnswers()">Clear Answers</button>
+    <button class="tertiary" onclick="scrollToUnanswered()">Next Unanswered</button>
+  </div>
+
+  <div id="quiz"></div>
+
+  <div id="result" class="result">
+    <h2 id="finalScore"></h2>
+    <div class="grade" id="grade"></div>
+    <p id="feedback"></p>
+    <div class="review-grid">
+      <div class="review-item"><strong id="correctCount">0</strong><br><span class="small">Correct</span></div>
+      <div class="review-item"><strong id="wrongCount">0</strong><br><span class="small">Incorrect</span></div>
+      <div class="review-item"><strong id="unansweredCount">0</strong><br><span class="small">Unanswered</span></div>
+      <div class="review-item"><strong id="timeUsed">00:00</strong><br><span class="small">Time Used</span></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AWS & DevOps Visual Study Library<br>
+    Prepared by Muhammad Khalid Khan • GitHub: @krmaryum • Email: krmaryum@yahoo.com
+  </div>
+</div>
+
+<script>
+const originalQuestions = [
+{
+q:"What is a database?",
+options:[
+"An organized collection of data that applications can store and manage",
+"A physical server used only for backups",
+"A networking protocol for cloud services",
+"A Linux command for searching files"
+],
+answer:0,
+explanation:"A database is an organized collection of data that applications can store, retrieve, update, and manage."
+},
+{
+q:"What is a database engine?",
+options:[
+"The software that stores, reads, updates, deletes, and protects data",
+"The AWS billing dashboard",
+"A database table containing user records",
+"A tool used only to create network connections"
+],
+answer:0,
+explanation:"The database engine is the software that performs the actual database operations."
+},
+{
+q:"Which statement correctly describes Amazon RDS?",
+options:[
+"It is a managed relational database service",
+"It is a database table",
+"It is only a caching service",
+"It is a Linux database command"
+],
+answer:0,
+explanation:"Amazon RDS is a managed AWS service for running relational database engines."
+},
+{
+q:"Which of the following is a database engine supported by Amazon RDS?",
+options:[
+"MySQL",
+"Amazon S3",
+"Amazon VPC",
+"CloudFront"
+],
+answer:0,
+explanation:"MySQL is a relational database engine supported by Amazon RDS."
+},
+{
+q:"Which sequence is correct?",
+options:[
+"RDS = service, MySQL = engine, school_db = database, students = table",
+"RDS = table, MySQL = cloud, school_db = engine, students = service",
+"RDS = engine, MySQL = row, school_db = service, students = database",
+"RDS = query, MySQL = table, school_db = row, students = engine"
+],
+answer:0,
+explanation:"RDS is the managed service, MySQL is the engine, school_db is the database, and students is a table."
+},
+{
+q:"Which database model stores data mainly in tables, rows, and columns?",
+options:[
+"Relational database",
+"Graph database",
+"Time-series database",
+"Key-value cache only"
+],
+answer:0,
+explanation:"Relational databases organize data into tables made of rows and columns."
+},
+{
+q:"Which feature is a major strength of relational databases?",
+options:[
+"Joins and relationships between tables",
+"Automatic conversion of all data into images",
+"No need for a schema under any condition",
+"Only storing temporary session data"
+],
+answer:0,
+explanation:"Relational databases are strong at structured relationships, joins, transactions, and SQL queries."
+},
+{
+q:"Which AWS service is a fully managed serverless NoSQL database?",
+options:[
+"Amazon DynamoDB",
+"Amazon RDS for MySQL",
+"Amazon Redshift",
+"Amazon ElastiCache"
+],
+answer:0,
+explanation:"DynamoDB is AWS's fully managed serverless NoSQL key-value and document database."
+},
+{
+q:"What is an item in DynamoDB?",
+options:[
+"One record in a table",
+"A database engine",
+"A relational join",
+"A network subnet"
+],
+answer:0,
+explanation:"In DynamoDB, an item is one complete record stored in a table."
+},
+{
+q:"What is an attribute in DynamoDB?",
+options:[
+"A field within an item",
+"A complete database server",
+"A backup region",
+"A SQL join"
+],
+answer:0,
+explanation:"An attribute is an individual field or property inside a DynamoDB item."
+},
+{
+q:"What is the primary purpose of a DynamoDB partition key?",
+options:[
+"To identify and distribute items",
+"To patch the operating system",
+"To create SQL joins",
+"To encrypt an EC2 key pair"
+],
+answer:0,
+explanation:"DynamoDB uses the partition key to identify items and distribute them across storage partitions."
+},
+{
+q:"What does a DynamoDB sort key help you do?",
+options:[
+"Organize related items under the same partition key",
+"Install a database engine",
+"Replace all table attributes",
+"Create an RDS instance class"
+],
+answer:0,
+explanation:"A sort key lets multiple related items share a partition key while being organized and queried by another value."
+},
+{
+q:"Which design approach is most important for DynamoDB?",
+options:[
+"Identify access patterns before designing keys and indexes",
+"Create as many joins as possible",
+"Always normalize data into many tables",
+"Select an operating system first"
+],
+answer:0,
+explanation:"DynamoDB design begins with the application's access patterns, then keys and indexes are designed around them."
+},
+{
+q:"Which workload is generally a strong fit for Amazon RDS?",
+options:[
+"Orders, payments, payroll, and structured relationships",
+"Temporary image thumbnails only",
+"Static website hosting",
+"DNS name resolution"
+],
+answer:0,
+explanation:"RDS is a strong fit for structured transactional workloads that need SQL, relationships, and consistency."
+},
+{
+q:"Which workload is generally a strong fit for DynamoDB?",
+options:[
+"Sessions, shopping carts, notifications, and key-based access",
+"Complex ad hoc joins across many relational tables",
+"Data warehousing only",
+"Operating system log rotation"
+],
+answer:0,
+explanation:"DynamoDB is well suited to predictable, high-scale, key-based access patterns."
+},
+{
+q:"What is Amazon Aurora?",
+options:[
+"An AWS-built relational database engine compatible with MySQL and PostgreSQL",
+"A serverless graph database",
+"A caching protocol",
+"A file system for EC2"
+],
+answer:0,
+explanation:"Aurora is an AWS-built relational database engine with MySQL- and PostgreSQL-compatible editions."
+},
+{
+q:"Which AWS database service is mainly used for in-memory caching?",
+options:[
+"Amazon ElastiCache",
+"Amazon Redshift",
+"Amazon Neptune",
+"Amazon Keyspaces"
+],
+answer:0,
+explanation:"ElastiCache stores frequently accessed data in memory to improve speed and reduce load on primary databases."
+},
+{
+q:"Which AWS service is designed for JSON-like document workloads?",
+options:[
+"Amazon DocumentDB",
+"Amazon Timestream",
+"Amazon Redshift",
+"Amazon RDS for Oracle"
+],
+answer:0,
+explanation:"DocumentDB is designed for document-oriented, JSON-like, MongoDB-compatible workloads."
+},
+{
+q:"Which AWS service is mainly a data warehouse for analytics and BI?",
+options:[
+"Amazon Redshift",
+"Amazon DynamoDB",
+"Amazon ElastiCache",
+"Amazon MemoryDB"
+],
+answer:0,
+explanation:"Redshift is designed for large-scale analytics, reporting, and business intelligence."
+},
+{
+q:"Which AWS service is designed for graph relationships and connected data?",
+options:[
+"Amazon Neptune",
+"Amazon RDS",
+"Amazon S3",
+"Amazon Timestream"
+],
+answer:0,
+explanation:"Neptune is a graph database used for connected data such as social networks, fraud detection, and recommendation systems."
+},
+{
+q:"Which AWS service is designed for time-series data such as server metrics and sensor readings?",
+options:[
+"Amazon Timestream",
+"Amazon DocumentDB",
+"Amazon Neptune",
+"Amazon Aurora"
+],
+answer:0,
+explanation:"Timestream is designed for data recorded over time, including metrics, IoT readings, and telemetry."
+},
+{
+q:"Which AWS service provides Cassandra-compatible wide-column database capabilities?",
+options:[
+"Amazon Keyspaces",
+"Amazon RDS",
+"Amazon Aurora",
+"Amazon ElastiCache"
+],
+answer:0,
+explanation:"Amazon Keyspaces is a managed wide-column database service compatible with Apache Cassandra."
+},
+{
+q:"What is the key difference between ElastiCache and MemoryDB?",
+options:[
+"ElastiCache is mainly a cache, while MemoryDB can serve as a durable in-memory database",
+"ElastiCache is relational, while MemoryDB is a data warehouse",
+"ElastiCache uses SQL joins, while MemoryDB uses graph traversal",
+"There is no difference"
+],
+answer:0,
+explanation:"ElastiCache is commonly used as a cache, while MemoryDB provides durable in-memory storage for suitable primary database workloads."
+},
+{
+q:"What does polyglot persistence mean?",
+options:[
+"Using different database technologies for different workload needs",
+"Using only one database for every application",
+"Running databases without backups",
+"Converting all relational data into files"
+],
+answer:0,
+explanation:"Polyglot persistence means selecting multiple database technologies, each suited to a particular part of the application."
+},
+{
+q:"Which principle is best when choosing an AWS database service?",
+options:[
+"Choose based on data model, access patterns, relationships, scale, and query needs",
+"Always choose DynamoDB because it is serverless",
+"Always choose RDS because it supports SQL",
+"Choose the service with the longest name"
+],
+answer:0,
+explanation:"The correct service depends on the workload's data model, access patterns, consistency, relationships, scale, and reporting requirements."
+}
+];
+
+let questions=[];
+let seconds=900;
+let initialSeconds=900;
+let timerId;
+let attempt=1;
+let submitted=false;
+
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function prepare(){
+  questions=shuffle(originalQuestions).map(q=>{
+    const opts=shuffle(q.options.map((text,i)=>({text,correct:i===q.answer})));
+    return {
+      q:q.q,
+      explanation:q.explanation,
+      options:opts,
+      answer:opts.findIndex(o=>o.correct)
+    };
+  });
+}
+
+function render(){
+  const quiz=document.getElementById("quiz");
+  quiz.innerHTML="";
+
+  questions.forEach((q,i)=>{
+    const card=document.createElement("div");
+    card.className="card";
+    card.id=`card-${i}`;
+    card.innerHTML=`
+      <div class="qnum">Question ${i+1} of ${questions.length}</div>
+      <div class="q">${q.q}</div>
+      ${q.options.map((o,j)=>`
+        <label class="opt" id="o-${i}-${j}">
+          <input type="radio" name="q${i}" value="${j}" onchange="updateProgress()">
+          ${String.fromCharCode(65+j)}. ${o.text}
+        </label>`).join("")}
+      <div class="exp" id="e-${i}"></div>
+    `;
+    quiz.appendChild(card);
+  });
+
+  updateProgress();
+}
+
+function updateProgress(){
+  let count=0;
+  questions.forEach((_,i)=>{
+    const selected=document.querySelector(`input[name="q${i}"]:checked`);
+    if(selected) count++;
+    document.getElementById(`card-${i}`).classList.remove("unanswered");
+  });
+
+  document.getElementById("answered").textContent=`${count}/${questions.length}`;
+  document.getElementById("progress").style.width=`${count/questions.length*100}%`;
+}
+
+function submitQuiz(auto=false){
+  if(submitted) return;
+
+  submitted=true;
+  clearInterval(timerId);
+
+  let score=0;
+  let unanswered=0;
+
+  questions.forEach((q,i)=>{
+    const selected=document.querySelector(`input[name="q${i}"]:checked`);
+    document.querySelectorAll(`input[name="q${i}"]`).forEach(x=>x.disabled=true);
+
+    q.options.forEach((_,j)=>{
+      const label=document.getElementById(`o-${i}-${j}`);
+      if(j===q.answer) label.classList.add("correct");
+      if(selected && Number(selected.value)===j && j!==q.answer){
+        label.classList.add("wrong");
+      }
+    });
+
+    if(selected && Number(selected.value)===q.answer){
+      score++;
+    } else if(!selected){
+      unanswered++;
+      document.getElementById(`card-${i}`).classList.add("unanswered");
+    }
+
+    const exp=document.getElementById(`e-${i}`);
+    exp.style.display="block";
+    exp.innerHTML=`<b>Correct answer:</b> ${String.fromCharCode(65+q.answer)}. ${q.options[q.answer].text}<br><b>Explanation:</b> ${q.explanation}`;
+  });
+
+  const wrong=questions.length-score-unanswered;
+  const pct=Math.round(score/questions.length*100);
+  const used=initialSeconds-seconds;
+  const usedMin=String(Math.floor(used/60)).padStart(2,"0");
+  const usedSec=String(used%60).padStart(2,"0");
+
+  document.getElementById("scoreLive").textContent=score;
+  document.getElementById("finalScore").textContent=`${score}/${questions.length} (${pct}%)`;
+  document.getElementById("correctCount").textContent=score;
+  document.getElementById("wrongCount").textContent=wrong;
+  document.getElementById("unansweredCount").textContent=unanswered;
+  document.getElementById("timeUsed").textContent=`${usedMin}:${usedSec}`;
+
+  let grade,msg;
+  if(pct>=90){
+    grade="Excellent — Database Expert Level";
+    msg="Outstanding work. You have a strong understanding of database engines and AWS purpose-built databases.";
+  } else if(pct>=80){
+    grade="Very Good";
+    msg="You understand the major services well. Review the few missed questions and try for 90% or higher.";
+  } else if(pct>=70){
+    grade="Good Foundation";
+    msg="Your foundation is solid. Review RDS vs DynamoDB and the purpose of each specialized AWS database.";
+  } else if(pct>=60){
+    grade="Developing";
+    msg="Review database engines, DynamoDB keys, and AWS database selection before reattempting.";
+  } else {
+    grade="Needs More Practice";
+    msg="Study the poster and explanations carefully, then use Reattempt & Shuffle for another practice round.";
+  }
+
+  document.getElementById("grade").textContent=grade;
+  document.getElementById("feedback").textContent=(auto?"Time expired. ":"")+msg;
+  document.getElementById("result").style.display="block";
+  document.getElementById("result").scrollIntoView({behavior:"smooth"});
+}
+
+function startTimer(){
+  clearInterval(timerId);
+  timerId=setInterval(()=>{
+    seconds--;
+    const min=String(Math.floor(seconds/60)).padStart(2,"0");
+    const sec=String(seconds%60).padStart(2,"0");
+    document.getElementById("timer").textContent=`${min}:${sec}`;
+
+    if(seconds<=120){
+      document.getElementById("timer").style.color="var(--red)";
+    }
+
+    if(seconds<=0){
+      clearInterval(timerId);
+      submitQuiz(true);
+    }
+  },1000);
+}
+
+function reattemptQuiz(){
+  attempt++;
+  submitted=false;
+  seconds=initialSeconds;
+
+  document.getElementById("attempt").textContent=attempt;
+  document.getElementById("timer").textContent="15:00";
+  document.getElementById("timer").style.color="var(--yellow)";
+  document.getElementById("result").style.display="none";
+  document.getElementById("scoreLive").textContent="0";
+
+  prepare();
+  render();
+  startTimer();
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function clearAnswers(){
+  if(submitted) return;
+  document.querySelectorAll('input[type="radio"]').forEach(x=>x.checked=false);
+  document.querySelectorAll(".card").forEach(c=>c.classList.remove("unanswered"));
+  updateProgress();
+}
+
+function scrollToUnanswered(){
+  if(submitted) return;
+  for(let i=0;i<questions.length;i++){
+    if(!document.querySelector(`input[name="q${i}"]:checked`)){
+      document.getElementById(`card-${i}`).scrollIntoView({behavior:"smooth",block:"center"});
+      document.getElementById(`card-${i}`).classList.add("unanswered");
+      setTimeout(()=>document.getElementById(`card-${i}`).classList.remove("unanswered"),1200);
+      return;
+    }
+  }
+  alert("All questions are answered. You can submit the quiz.");
+}
+
+prepare();
+render();
+startTimer();
+</script>
+</body>
+</html>

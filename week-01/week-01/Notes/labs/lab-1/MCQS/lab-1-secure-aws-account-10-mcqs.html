@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lab 1 Secure Your AWS Account – 10 MCQs</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#1f2937;line-height:1.6}
+header{background:linear-gradient(135deg,#111827,#374151);color:white;padding:28px 16px;text-align:center}
+header h1{margin:0 0 8px;font-size:30px}
+header p{margin:0;opacity:.95}
+.container{max-width:1000px;margin:22px auto;padding:0 16px 45px}
+.panel,.question-card,.result{background:white;border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.panel{padding:18px;margin-bottom:18px}
+.meta-grid{display:grid;grid-template-columns:repeat(4,minmax(140px,1fr));gap:12px;margin-top:12px}
+.meta-card{background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:12px}
+.meta-card strong{display:block;color:#111827;margin-bottom:3px}
+.sticky-bar{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;background:#fff7ed;border:1px solid #fed7aa;border-radius:14px;padding:13px 16px;margin-bottom:20px;box-shadow:0 4px 14px rgba(0,0,0,.05)}
+.sticky-bar span{font-weight:bold;color:#9a3412}
+.question-card{padding:18px;margin-bottom:16px;border-left:6px solid #2563eb}
+.question-card h3{margin:0 0 6px;font-size:18px;color:#111827}
+.topic-tag{display:inline-block;font-size:12px;background:#e0e7ff;color:#3730a3;padding:3px 8px;border-radius:999px;margin-bottom:10px;font-weight:bold}
+.option{display:block;padding:10px 12px;margin:8px 0;border:1px solid #d1d5db;border-radius:10px;background:#f9fafb;cursor:pointer;transition:.18s}
+.option:hover{background:#eef2ff;border-color:#6366f1}
+.option input{margin-right:9px}
+.correct{background:#dcfce7!important;border-color:#16a34a!important}
+.wrong{background:#fee2e2!important;border-color:#dc2626!important}
+.explanation{display:none;margin-top:12px;padding:12px;border-radius:10px;background:#eff6ff;border:1px solid #bfdbfe}
+.buttons{display:flex;flex-wrap:wrap;gap:12px;margin:24px 0}
+button{border:none;border-radius:10px;padding:12px 18px;font-weight:bold;font-size:15px;cursor:pointer}
+.submit-btn{background:#2563eb;color:white}.show-btn{background:#f97316;color:white}.reset-btn{background:#111827;color:white}.top-btn{background:#059669;color:white}
+.result{display:none;padding:22px;border-top:6px solid #16a34a;margin-top:20px}
+.result h2{margin-top:0}
+.breakdown{margin-top:14px;width:100%;border-collapse:collapse}
+.breakdown th,.breakdown td{border:1px solid #e5e7eb;padding:9px;text-align:left}
+.breakdown th{background:#f3f4f6}
+.small-note{color:#4b5563;font-size:14px}
+footer{text-align:center;color:#6b7280;padding:20px;font-size:14px}
+@media(max-width:750px){.meta-grid{grid-template-columns:1fr}.sticky-bar{position:static}header h1{font-size:24px}}
+</style>
+</head>
+<body>
+<header>
+<h1>Lab 1 – Secure Your AWS Account</h1>
+<p>10 MCQs with timer, score checking, answer checking, and explanations</p>
+</header>
+
+<div class="container">
+<div class="panel">
+<h2>Quiz Instructions</h2>
+<p>This quiz is based on Lab 1 study notes: root MFA, billing dashboard, budget alerts, screenshot safety, and avoiding daily root user usage.</p>
+<div class="meta-grid">
+<div class="meta-card"><strong>Total Questions</strong>10</div>
+<div class="meta-card"><strong>Timer</strong>10 minutes</div>
+<div class="meta-card"><strong>Passing Goal</strong>80% or above</div>
+<div class="meta-card"><strong>Re-attempt</strong>Answers shuffle every time</div>
+</div>
+<p class="small-note">Answer all questions, then click Submit Quiz. You will see score, correct/wrong answers, topic breakdown, and short explanations.</p>
+</div>
+
+<div class="sticky-bar">
+<div>Time Left: <span id="timer">10:00</span></div>
+<div>Answered: <span id="answeredCount">0</span>/10</div>
+<div>Score: <span id="liveScore">Not submitted</span></div>
+</div>
+
+<form id="quizForm"></form>
+
+<div class="buttons">
+<button class="submit-btn" type="button" onclick="submitQuiz()">Submit Quiz</button>
+<button class="show-btn" type="button" onclick="showAnswers()">Show Answers</button>
+<button class="reset-btn" type="button" onclick="resetQuiz()">Re-attempt Quiz</button>
+<button class="top-btn" type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to Top</button>
+</div>
+
+<div class="result" id="resultBox"></div>
+</div>
+
+<footer>Created for AWS Lab 1 revision and practice.</footer>
+
+<script>
+const originalQuestions = [{"topic": "Lab Goal", "q": "What is the main goal of Lab 1 – Secure Your AWS Account?", "correct": "Create a safe AWS account foundation before doing hands-on AWS practice", "options": ["Create a safe AWS account foundation before doing hands-on AWS practice", "Create as many EC2 instances as possible", "Disable all billing alerts", "Use root user for every AWS task"], "explanation": "Lab 1 focuses on account safety first: protect root user, enable MFA, monitor billing, and avoid daily root usage."}, {"topic": "Root User", "q": "Why should the root user not be used for daily AWS work?", "correct": "Because the root user has full access to the entire AWS account", "options": ["Because the root user has full access to the entire AWS account", "Because the root user cannot access billing", "Because the root user can only access S3", "Because root user is only used for GitHub"], "explanation": "The root user has complete access to all AWS services, billing, account settings, and security settings."}, {"topic": "MFA", "q": "What does MFA stand for?", "correct": "Multi-Factor Authentication", "options": ["Multi-Factor Authentication", "Main File Access", "Managed Firewall Account", "Monthly Free Alert"], "explanation": "MFA stands for Multi-Factor Authentication. It adds an extra verification step during login."}, {"topic": "MFA", "q": "Which statement best explains MFA?", "correct": "Password plus MFA code creates a safer login", "options": ["Password plus MFA code creates a safer login", "MFA removes the need for passwords", "MFA is only used for billing reports", "MFA automatically deletes unused resources"], "explanation": "MFA improves security because even if someone knows the password, they still need the MFA code."}, {"topic": "Billing", "q": "Where do you go in the AWS Console to check charges and create budgets?", "correct": "Billing and Cost Management", "options": ["Billing and Cost Management", "EC2 Security Groups", "S3 Bucket Policy", "CloudShell Settings"], "explanation": "The Billing and Cost Management area is used to check charges, Free Tier usage, cost summary, and budgets."}, {"topic": "Budget Alert", "q": "What is the purpose of creating a budget alert?", "correct": "To get notified before AWS charges become high", "options": ["To get notified before AWS charges become high", "To make every AWS service free", "To disable MFA on the root user", "To give AdministratorAccess to every user"], "explanation": "A budget alert helps prevent billing surprises by notifying you when estimated charges reach a selected threshold."}, {"topic": "Budget Alert", "q": "Which is a good beginner budget example from the Lab 1 notes?", "correct": "$2 or $5 budget with 80% or 100% alert threshold", "options": ["$2 or $5 budget with 80% or 100% alert threshold", "$5000 budget with no email alert", "No budget because Free Tier means everything is free", "Only create budget after 10 weeks"], "explanation": "A small budget like $2 or $5 with an 80% or 100% alert threshold is useful for beginner AWS practice."}, {"topic": "IAM", "q": "What should be used for daily AWS practice instead of the root user?", "correct": "IAM user, IAM role, or IAM Identity Center user", "options": ["IAM user, IAM role, or IAM Identity Center user", "Root user only", "Public access keys posted in notes", "Payment method page"], "explanation": "For daily work, use IAM users, roles, or IAM Identity Center users with limited permissions."}, {"topic": "Screenshot Security", "q": "Which item should never be shared in screenshots?", "correct": "Access keys and secret access keys", "options": ["Access keys and secret access keys", "A cropped screenshot showing MFA enabled", "A cropped screenshot showing budget created", "A general note about least privilege"], "explanation": "Access keys and secret access keys are sensitive credentials. Never share them in screenshots or notes."}, {"topic": "Lab Deliverables", "q": "Which screenshots are required for Lab 1 deliverables?", "correct": "Root MFA enabled and billing/budget alert created", "options": ["Root MFA enabled and billing/budget alert created", "Only EC2 instance type screenshot", "Only S3 bucket object screenshot", "Only GitHub profile screenshot"], "explanation": "Lab 1 requires screenshots showing root MFA enabled and billing alert or budget alert created."}];
+let questions=[];let timeLeft=10*60;let timerInterval=null;let submitted=false;
+
+function shuffleArray(array){const arr=[...array];for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr}
+function prepareQuestions(){questions=originalQuestions.map((item,index)=>({...item,id:index,shuffledOptions:shuffleArray(item.options)}))}
+function renderQuiz(){const form=document.getElementById("quizForm");form.innerHTML="";questions.forEach((item,index)=>{const card=document.createElement("div");card.className="question-card";const tag=document.createElement("div");tag.className="topic-tag";tag.textContent=item.topic;card.appendChild(tag);const title=document.createElement("h3");title.textContent=`${index+1}. ${item.q}`;card.appendChild(title);item.shuffledOptions.forEach(optionText=>{const label=document.createElement("label");label.className="option";label.setAttribute("data-question",index);label.setAttribute("data-option-text",optionText);const input=document.createElement("input");input.type="radio";input.name=`q${index}`;input.value=optionText;input.addEventListener("change",updateAnsweredCount);label.appendChild(input);label.appendChild(document.createTextNode(optionText));card.appendChild(label)});const exp=document.createElement("div");exp.className="explanation";exp.id=`explanation-${index}`;exp.innerHTML=`<strong>Explanation:</strong> ${item.explanation}`;card.appendChild(exp);form.appendChild(card)})}
+function updateAnsweredCount(){let answered=0;questions.forEach((_,index)=>{if(document.querySelector(`input[name="q${index}"]:checked`))answered++});document.getElementById("answeredCount").textContent=answered}
+function clearStyles(){document.querySelectorAll(".option").forEach(label=>label.classList.remove("correct","wrong"));document.querySelectorAll(".explanation").forEach(exp=>exp.style.display="none")}
+function getPerformanceMessage(p){if(p>=90)return"Excellent work. Your Lab 1 security basics are strong.";if(p>=80)return"Very good. You understand Lab 1 well.";if(p>=60)return"Good effort. Review weak topics and try again.";return"Keep practicing. Review Lab 1 notes and re-attempt."}
+function submitQuiz(){if(submitted)return;submitted=true;clearInterval(timerInterval);clearStyles();let score=0,unanswered=0;const topicStats={};questions.forEach((item,index)=>{if(!topicStats[item.topic])topicStats[item.topic]={correct:0,total:0};topicStats[item.topic].total++;const selected=document.querySelector(`input[name="q${index}"]:checked`);const labels=document.querySelectorAll(`label[data-question="${index}"]`);labels.forEach(label=>{if(label.getAttribute("data-option-text")===item.correct)label.classList.add("correct")});if(!selected){unanswered++}else if(selected.value===item.correct){score++;topicStats[item.topic].correct++}else{labels.forEach(label=>{if(label.getAttribute("data-option-text")===selected.value)label.classList.add("wrong")})}document.getElementById(`explanation-${index}`).style.display="block"});const percentage=Math.round((score/questions.length)*100);document.getElementById("liveScore").textContent=`${score}/10 (${percentage}%)`;const rows=Object.entries(topicStats).map(([topic,stat])=>`<tr><td>${topic}</td><td>${stat.correct}/${stat.total}</td><td>${Math.round((stat.correct/stat.total)*100)}%</td></tr>`).join("");const weak=Object.entries(topicStats).filter(([_,stat])=>(stat.correct/stat.total)<.8).map(([topic])=>topic);const weakText=weak.length?`<p><strong>Suggested revision:</strong> ${weak.join(", ")}</p>`:`<p><strong>Suggested revision:</strong> Great job. Quick review only.</p>`;const resultBox=document.getElementById("resultBox");resultBox.style.display="block";resultBox.innerHTML=`<h2>Quiz Result</h2><p><strong>Score:</strong> ${score} out of ${questions.length}</p><p><strong>Percentage:</strong> ${percentage}%</p><p><strong>Unanswered Questions:</strong> ${unanswered}</p><p>${getPerformanceMessage(percentage)}</p>${weakText}<table class="breakdown"><thead><tr><th>Topic</th><th>Score</th><th>Percentage</th></tr></thead><tbody>${rows}</tbody></table>`;resultBox.scrollIntoView({behavior:"smooth"})}
+function showAnswers(){clearStyles();questions.forEach((item,index)=>{document.querySelectorAll(`label[data-question="${index}"]`).forEach(label=>{if(label.getAttribute("data-option-text")===item.correct)label.classList.add("correct")});document.getElementById(`explanation-${index}`).style.display="block"})}
+function resetQuiz(){submitted=false;clearInterval(timerInterval);prepareQuestions();renderQuiz();document.getElementById("answeredCount").textContent="0";document.getElementById("liveScore").textContent="Not submitted";document.getElementById("resultBox").style.display="none";timeLeft=10*60;updateTimerDisplay();startTimer();window.scrollTo({top:0,behavior:"smooth"})}
+function updateTimerDisplay(){const m=Math.floor(timeLeft/60);const s=timeLeft%60;document.getElementById("timer").textContent=`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`}
+function startTimer(){timerInterval=setInterval(()=>{if(timeLeft<=0){clearInterval(timerInterval);if(!submitted){alert("Time is up. Your quiz will be submitted now.");submitQuiz()}return}timeLeft--;updateTimerDisplay()},1000)}
+prepareQuestions();renderQuiz();updateTimerDisplay();startTimer();
+</script>
+</body>
+</html>

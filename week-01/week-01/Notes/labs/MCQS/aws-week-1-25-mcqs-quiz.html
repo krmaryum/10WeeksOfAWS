@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AWS Week 1 MCQ Quiz</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #111827;
+    --text: #e5e7eb;
+    --muted: #9ca3af;
+    --accent: #38bdf8;
+    --good: #22c55e;
+    --bad: #ef4444;
+    --warn: #f59e0b;
+    --border: #334155;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  header {
+    background: #020617;
+    border-bottom: 1px solid var(--border);
+    padding: 28px 18px;
+    text-align: center;
+  }
+  header h1 { margin: 0 0 8px; font-size: 2rem; }
+  header p { margin: 0; color: var(--muted); }
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 22px;
+  }
+  .top-panel {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .stat {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    text-align: center;
+  }
+  .stat .label { color: var(--muted); font-size: 0.9rem; }
+  .stat .value { font-size: 1.35rem; font-weight: bold; color: var(--accent); }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 16px 0 22px;
+  }
+  button {
+    border: none;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 1rem;
+    cursor: pointer;
+    background: var(--accent);
+    color: #00111f;
+    font-weight: bold;
+  }
+  button.secondary { background: #1f2937; color: var(--text); border: 1px solid var(--border); }
+  button.warn { background: var(--warn); color: #111827; }
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 16px;
+  }
+  .question-title {
+    font-size: 1.05rem;
+    font-weight: bold;
+    margin-bottom: 12px;
+  }
+  .options {
+    display: grid;
+    gap: 10px;
+  }
+  label.option {
+    display: block;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px;
+    cursor: pointer;
+    background: #0b1220;
+  }
+  label.option:hover { border-color: var(--accent); }
+  input[type="radio"] { margin-right: 8px; }
+  .feedback {
+    display: none;
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  .feedback.correct { display: block; border-color: var(--good); background: rgba(34,197,94,0.12); }
+  .feedback.incorrect { display: block; border-color: var(--bad); background: rgba(239,68,68,0.12); }
+  .explanation { color: var(--muted); margin-top: 6px; }
+  .result {
+    display: none;
+    background: #020617;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    margin: 20px 0;
+  }
+  .result.show { display: block; }
+  .progress {
+    height: 12px;
+    background: #0b1220;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+  .progress-bar {
+    height: 100%;
+    width: 0%;
+    background: var(--accent);
+    transition: width 0.3s;
+  }
+  .small { color: var(--muted); font-size: 0.95rem; }
+  footer {
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    margin-top: 24px;
+    padding-top: 18px;
+  }
+  @media (max-width: 800px) {
+    .top-panel { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 520px) {
+    .top-panel { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.55rem; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>AWS Week 1 – 25 MCQs Quiz</h1>
+  <p>IAM, S3, EC2, Billing, STS, Switch Role, GitHub OIDC, and GitHub Actions</p>
+</header>
+
+<main class="container">
+  <section class="top-panel">
+    <div class="stat"><div class="label">Questions</div><div class="value" id="totalQ">25</div></div>
+    <div class="stat"><div class="label">Answered</div><div class="value" id="answeredCount">0</div></div>
+    <div class="stat"><div class="label">Score</div><div class="value" id="scoreBox">0</div></div>
+    <div class="stat"><div class="label">Timer</div><div class="value" id="timer">25:00</div></div>
+  </section>
+
+  <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+  <p class="small">Answer all questions, then click <strong>Submit Quiz</strong>. Use <strong>Re-attempt</strong> to shuffle questions and answers.</p>
+
+  <div class="actions">
+    <button onclick="submitQuiz()">Submit Quiz</button>
+    <button class="secondary" onclick="showAnswers()">Show Answers</button>
+    <button class="warn" onclick="restartQuiz()">Re-attempt / Shuffle</button>
+  </div>
+
+  <section id="result" class="result"></section>
+  <section id="quiz"></section>
+
+  <footer>
+    <p><strong>Week 1 Topics:</strong> AWS account security, IAM users/groups/roles, policies, S3/EC2/Billing read-only access, STS temporary credentials, Switch Role, and GitHub OIDC secure access without long-lived keys.</p>
+    <p>Alhamdulillah, Week 1 revision quiz.</p>
+  </footer>
+</main>
+
+<script>
+const originalQuestions = [
+  {
+    "question": "What does IAM stand for in AWS?",
+    "options": [
+      "Internet Access Manager",
+      "Internal Account Monitoring",
+      "Instance Automation Module",
+      "Identity and Access Management"
+    ],
+    "answer": "Identity and Access Management",
+    "explanation": "IAM stands for Identity and Access Management. It is used to manage AWS users, groups, roles, and permissions."
+  },
+  {
+    "question": "Which AWS identity should not be used for daily tasks?",
+    "options": [
+      "Read-only user",
+      "Root user",
+      "IAM group",
+      "IAM role"
+    ],
+    "answer": "Root user",
+    "explanation": "The root user has full access to the AWS account, so it should be protected with MFA and not used for daily work."
+  },
+  {
+    "question": "What does MFA provide?",
+    "options": [
+      "Automatic billing discount",
+      "Unlimited S3 storage",
+      "Free EC2 instances",
+      "Extra security after password"
+    ],
+    "answer": "Extra security after password",
+    "explanation": "MFA means Multi-Factor Authentication. It adds another verification step after the password."
+  },
+  {
+    "question": "What is the best meaning of least privilege?",
+    "options": [
+      "Disable all AWS security features",
+      "Give only the permissions required for the task",
+      "Give every user AdministratorAccess",
+      "Use root user for all services"
+    ],
+    "answer": "Give only the permissions required for the task",
+    "explanation": "Least privilege means users and roles should have only the permissions they need, nothing extra."
+  },
+  {
+    "question": "What is an AWS managed policy?",
+    "options": [
+      "A policy written only by GitHub",
+      "A policy that deletes all resources",
+      "A policy stored only inside S3",
+      "A ready-made policy created and managed by AWS"
+    ],
+    "answer": "A ready-made policy created and managed by AWS",
+    "explanation": "AWS managed policies are created and maintained by AWS, such as ReadOnlyAccess and AmazonS3ReadOnlyAccess."
+  },
+  {
+    "question": "What is a customer managed policy?",
+    "options": [
+      "A temporary password",
+      "A custom policy created and managed by you",
+      "A policy that only AWS can edit",
+      "A billing invoice"
+    ],
+    "answer": "A custom policy created and managed by you",
+    "explanation": "A customer managed policy is created by you for your specific permission needs."
+  },
+  {
+    "question": "In an IAM JSON policy, what does Action mean?",
+    "options": [
+      "The color of the AWS Console",
+      "The name of the GitHub repository",
+      "The billing payment method",
+      "The AWS API operation allowed or denied"
+    ],
+    "answer": "The AWS API operation allowed or denied",
+    "explanation": "Action defines the AWS operation, such as s3:GetObject or sts:AssumeRole."
+  },
+  {
+    "question": "In an IAM JSON policy, what does Resource mean?",
+    "options": [
+      "The browser used for AWS Console",
+      "Where the permission applies",
+      "Who created the AWS account",
+      "The monthly budget amount"
+    ],
+    "answer": "Where the permission applies",
+    "explanation": "Resource defines which AWS resource the permission applies to, such as an S3 bucket ARN."
+  },
+  {
+    "question": "What does ARN stand for?",
+    "options": [
+      "AWS Region Number",
+      "Account Role Network",
+      "Application Runtime Node",
+      "Amazon Resource Name"
+    ],
+    "answer": "Amazon Resource Name",
+    "explanation": "ARN stands for Amazon Resource Name. It uniquely identifies AWS resources."
+  },
+  {
+    "question": "Which ARN refers to the S3 bucket itself?",
+    "options": [
+      "arn:aws:iam:::my-bucket",
+      "arn:aws:s3:::my-bucket",
+      "arn:aws:s3:::my-bucket/*",
+      "arn:aws:ec2:::my-bucket"
+    ],
+    "answer": "arn:aws:s3:::my-bucket",
+    "explanation": "The bucket ARN without /* refers to the bucket itself. The ARN with /* refers to objects inside the bucket."
+  },
+  {
+    "question": "Which ARN refers to all objects inside an S3 bucket?",
+    "options": [
+      "arn:aws:s3:::my-bucket",
+      "arn:aws:iam::my-bucket",
+      "arn:aws:ec2:::my-bucket/*",
+      "arn:aws:s3:::my-bucket/*"
+    ],
+    "answer": "arn:aws:s3:::my-bucket/*",
+    "explanation": "The /* at the end means all objects/files inside the S3 bucket."
+  },
+  {
+    "question": "In S3, what is an object?",
+    "options": [
+      "A GitHub workflow",
+      "A file or data stored inside a bucket",
+      "The AWS root user",
+      "A billing alert"
+    ],
+    "answer": "A file or data stored inside a bucket",
+    "explanation": "Everything stored inside an S3 bucket is called an object, such as PDF, image, text file, or folder/file path."
+  },
+  {
+    "question": "Which permission allows listing objects inside a specific S3 bucket?",
+    "options": [
+      "s3:GetObject",
+      "s3:PutObject",
+      "sts:AssumeRole",
+      "s3:ListBucket"
+    ],
+    "answer": "s3:ListBucket",
+    "explanation": "s3:ListBucket is used to list objects inside a bucket and applies to the bucket ARN."
+  },
+  {
+    "question": "Which permission allows reading/downloading objects from S3?",
+    "options": [
+      "iam:CreateUser",
+      "s3:GetObject",
+      "s3:DeleteObject",
+      "s3:CreateBucket"
+    ],
+    "answer": "s3:GetObject",
+    "explanation": "s3:GetObject allows reading or downloading objects inside an S3 bucket."
+  },
+  {
+    "question": "What is EC2?",
+    "options": [
+      "External Cost Calculator",
+      "Encrypted Cloud Console",
+      "Elastic Container Credential",
+      "Elastic Compute Cloud"
+    ],
+    "answer": "Elastic Compute Cloud",
+    "explanation": "EC2 stands for Elastic Compute Cloud. It provides virtual servers in AWS."
+  },
+  {
+    "question": "What is the purpose of AWSBillingReadOnlyAccess?",
+    "options": [
+      "To create IAM users",
+      "To allow viewing billing information",
+      "To create EC2 instances",
+      "To delete S3 buckets"
+    ],
+    "answer": "To allow viewing billing information",
+    "explanation": "AWSBillingReadOnlyAccess allows read-only access to billing information, not resource management."
+  },
+  {
+    "question": "What does STS stand for?",
+    "options": [
+      "Secure Transfer Storage",
+      "Simple Task Scheduler",
+      "System Tracking Service",
+      "Security Token Service"
+    ],
+    "answer": "Security Token Service",
+    "explanation": "STS stands for Security Token Service. It provides temporary AWS security credentials."
+  },
+  {
+    "question": "What is the purpose of sts:AssumeRole?",
+    "options": [
+      "Allows deleting a GitHub repository",
+      "Allows an identity to assume an IAM role",
+      "Allows creating an S3 bucket",
+      "Allows changing root password"
+    ],
+    "answer": "Allows an identity to assume an IAM role",
+    "explanation": "sts:AssumeRole allows a user or identity to switch into a role and use its temporary permissions."
+  },
+  {
+    "question": "What is the main difference between IAM user and IAM role?",
+    "options": [
+      "IAM user is temporary; IAM role is always root",
+      "IAM role stores credit card information",
+      "IAM user can only access GitHub",
+      "IAM user is a login identity; IAM role provides temporary access"
+    ],
+    "answer": "IAM user is a login identity; IAM role provides temporary access",
+    "explanation": "An IAM user is commonly used to sign in, while a role is assumed temporarily to use permissions."
+  },
+  {
+    "question": "What is a trust policy?",
+    "options": [
+      "A GitHub README file",
+      "A policy that defines who can assume a role",
+      "A policy that lists S3 files",
+      "A policy that sets budget amount"
+    ],
+    "answer": "A policy that defines who can assume a role",
+    "explanation": "A role trust policy defines which users, services, accounts, or federated identities can assume the role."
+  },
+  {
+    "question": "What does OIDC stand for?",
+    "options": [
+      "Online Identity Cloud",
+      "Open Infrastructure Data Center",
+      "Object Identity Control",
+      "OpenID Connect"
+    ],
+    "answer": "OpenID Connect",
+    "explanation": "OIDC stands for OpenID Connect. GitHub Actions can use it to prove identity to AWS."
+  },
+  {
+    "question": "In GitHub OIDC with AWS, why is id-token: write required?",
+    "options": [
+      "It disables AWS IAM",
+      "It allows GitHub Actions to request an OIDC token",
+      "It allows deleting the repository",
+      "It creates an EC2 instance automatically"
+    ],
+    "answer": "It allows GitHub Actions to request an OIDC token",
+    "explanation": "id-token: write is required so the workflow can request an OIDC token from GitHub."
+  },
+  {
+    "question": "Which STS action is used by GitHub Actions OIDC to assume an AWS role?",
+    "options": [
+      "sts:DeleteRole",
+      "sts:CreateBucket",
+      "sts:RootLogin",
+      "sts:AssumeRoleWithWebIdentity"
+    ],
+    "answer": "sts:AssumeRoleWithWebIdentity",
+    "explanation": "GitHub Actions OIDC uses sts:AssumeRoleWithWebIdentity to assume an AWS role with an OIDC token."
+  },
+  {
+    "question": "What is the biggest security benefit of GitHub OIDC with AWS?",
+    "options": [
+      "It makes all S3 buckets public",
+      "No long-lived AWS access keys need to be stored in GitHub Secrets",
+      "It gives everyone admin access",
+      "It removes the need for IAM"
+    ],
+    "answer": "No long-lived AWS access keys need to be stored in GitHub Secrets",
+    "explanation": "OIDC allows GitHub Actions to use temporary credentials from AWS STS instead of permanent AWS keys."
+  },
+  {
+    "question": "What confirms a successful GitHub OIDC AWS workflow?",
+    "options": [
+      "The workflow deletes the AWS account",
+      "GitHub asks for a root password",
+      "S3 upload works without permissions",
+      "aws sts get-caller-identity shows an assumed-role ARN"
+    ],
+    "answer": "aws sts get-caller-identity shows an assumed-role ARN",
+    "explanation": "If get-caller-identity shows an assumed-role ARN, GitHub Actions successfully assumed the AWS role."
+  }
+];
+let questions = [];
+let submitted = false;
+let timerSeconds = 25 * 60;
+let timerId = null;
+
+function shuffle(array) {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function startQuiz() {
+  submitted = false;
+  timerSeconds = 25 * 60;
+  questions = shuffle(originalQuestions).map(q => ({...q, options: shuffle(q.options)}));
+  document.getElementById("result").className = "result";
+  document.getElementById("result").innerHTML = "";
+  renderQuiz();
+  updateStats();
+  clearInterval(timerId);
+  timerId = setInterval(updateTimer, 1000);
+}
+
+function renderQuiz() {
+  const quiz = document.getElementById("quiz");
+  quiz.innerHTML = "";
+  questions.forEach((q, index) => {
+    const card = document.createElement("div");
+    card.className = "question-card";
+    const optionsHtml = q.options.map((opt, optIndex) => `
+      <label class="option">
+        <input type="radio" name="q${index}" value="${escapeHtml(opt)}" onchange="updateStats()">
+        ${escapeHtml(opt)}
+      </label>
+    `).join("");
+    card.innerHTML = `
+      <div class="question-title">${index + 1}. ${escapeHtml(q.question)}</div>
+      <div class="options">${optionsHtml}</div>
+      <div id="feedback-${index}" class="feedback"></div>
+    `;
+    quiz.appendChild(card);
+  });
+}
+
+function getSelected(index) {
+  const selected = document.querySelector(`input[name="q${index}"]:checked`);
+  return selected ? selected.value : null;
+}
+
+function submitQuiz() {
+  submitted = true;
+  clearInterval(timerId);
+  let correct = 0;
+  let unanswered = 0;
+
+  questions.forEach((q, index) => {
+    const selected = getSelected(index);
+    const feedback = document.getElementById(`feedback-${index}`);
+    if (!selected) {
+      unanswered++;
+      feedback.className = "feedback incorrect";
+      feedback.innerHTML = `<strong>Not answered.</strong><div class="explanation">Correct answer: <strong>${escapeHtml(q.answer)}</strong><br>${escapeHtml(q.explanation)}</div>`;
+    } else if (selected === q.answer) {
+      correct++;
+      feedback.className = "feedback correct";
+      feedback.innerHTML = `<strong>Correct ✅</strong><div class="explanation">${escapeHtml(q.explanation)}</div>`;
+    } else {
+      feedback.className = "feedback incorrect";
+      feedback.innerHTML = `<strong>Incorrect ❌</strong><div class="explanation">Your answer: <strong>${escapeHtml(selected)}</strong><br>Correct answer: <strong>${escapeHtml(q.answer)}</strong><br>${escapeHtml(q.explanation)}</div>`;
+    }
+  });
+
+  const percent = Math.round((correct / questions.length) * 100);
+  const result = document.getElementById("result");
+  result.className = "result show";
+  result.innerHTML = `
+    <h2>Quiz Result</h2>
+    <p><strong>Score:</strong> ${correct} / ${questions.length} (${percent}%)</p>
+    <p><strong>Unanswered:</strong> ${unanswered}</p>
+    <p>${getMessage(percent)}</p>
+  `;
+  document.getElementById("scoreBox").textContent = correct;
+  updateStats();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function showAnswers() {
+  questions.forEach((q, index) => {
+    const selected = getSelected(index);
+    const feedback = document.getElementById(`feedback-${index}`);
+    const isCorrect = selected === q.answer;
+    feedback.className = "feedback " + (isCorrect ? "correct" : "incorrect");
+    feedback.innerHTML = `
+      <strong>Answer:</strong> ${escapeHtml(q.answer)}
+      <div class="explanation">${escapeHtml(q.explanation)}</div>
+    `;
+  });
+}
+
+function restartQuiz() {
+  startQuiz();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function updateStats() {
+  const answered = questions.filter((_, index) => getSelected(index)).length;
+  document.getElementById("answeredCount").textContent = answered;
+  document.getElementById("totalQ").textContent = questions.length;
+  document.getElementById("progressBar").style.width = (answered / questions.length * 100) + "%";
+  if (!submitted) {
+    document.getElementById("scoreBox").textContent = "0";
+  }
+}
+
+function updateTimer() {
+  timerSeconds--;
+  if (timerSeconds <= 0) {
+    timerSeconds = 0;
+    clearInterval(timerId);
+    if (!submitted) submitQuiz();
+  }
+  const min = String(Math.floor(timerSeconds / 60)).padStart(2, "0");
+  const sec = String(timerSeconds % 60).padStart(2, "0");
+  document.getElementById("timer").textContent = `${min}:${sec}`;
+}
+
+function getMessage(percent) {
+  if (percent >= 90) return "Excellent work! Your Week 1 concepts are very strong.";
+  if (percent >= 75) return "Good job! Review the incorrect answers and you are ready.";
+  if (percent >= 60) return "Nice effort. Review IAM, STS, ARN, and OIDC again.";
+  return "Keep practicing. Focus on IAM basics, S3 ARN, STS, and GitHub OIDC.";
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, m => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  }[m]));
+}
+
+startQuiz();
+</script>
+</body>
+</html>
