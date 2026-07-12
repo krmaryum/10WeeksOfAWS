@@ -225,12 +225,12 @@ Alhamdulillah — step by step, the concepts are becoming clearer.
 
 Let's learn together and grow
 
-#90DaysOfDevOps
-#DevOpsKaJosh
-#TrainWithShubham
-@gangadhar ure 
-#10WeeksOfAWS 
-#AWS10WeekChallenge 
+#90DaysOfDevOps\
+#DevOpsKaJosh\
+#TrainWithShubham\
+@gangadhar ure\ 
+#10WeeksOfAWS\ 
+#AWS10WeekChallenge\ 
 #CloudAdhar
 
 Happy Learning! TrainWithShubham
