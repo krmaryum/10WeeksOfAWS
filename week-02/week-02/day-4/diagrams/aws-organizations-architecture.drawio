@@ -1,0 +1,56 @@
+<mxfile host="app.diagrams.net" modified="2026-07-13T00:00:00.000Z" agent="ChatGPT" version="24.7.17">
+  <diagram id="aws-org-day4" name="Day 4 - AWS Organizations">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="DAY 4 — AWS ORGANIZATIONS MULTI-ACCOUNT ARCHITECTURE" style="text;html=1;align=center;verticalAlign=middle;fontSize=28;fontStyle=1;fontColor=#172B4D;" vertex="1" parent="1">
+          <mxGeometry x="200" y="20" width="1400" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="problem" value="ONE SHARED AWS ACCOUNT" style="swimlane;html=1;rounded=1;startSize=50;fillColor=#FFF4F1;strokeColor=#C62828;strokeWidth=3;fontSize=22;fontStyle=1;fontColor=#8E1515;" vertex="1" parent="1">
+          <mxGeometry x="40" y="100" width="520" height="640" as="geometry"/>
+        </mxCell>
+        <mxCell id="dev" value="Development" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#C62828;fontSize=16;" vertex="1" parent="problem"><mxGeometry x="30" y="80" width="210" height="60" as="geometry"/></mxCell>
+        <mxCell id="test" value="Testing" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#C62828;fontSize=16;" vertex="1" parent="problem"><mxGeometry x="280" y="80" width="210" height="60" as="geometry"/></mxCell>
+        <mxCell id="prod" value="Production" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#C62828;fontSize=16;" vertex="1" parent="problem"><mxGeometry x="30" y="165" width="210" height="60" as="geometry"/></mxCell>
+        <mxCell id="security" value="Security" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#C62828;fontSize=16;" vertex="1" parent="problem"><mxGeometry x="280" y="165" width="210" height="60" as="geometry"/></mxCell>
+        <mxCell id="finance" value="Finance" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#C62828;fontSize=16;" vertex="1" parent="problem"><mxGeometry x="155" y="250" width="210" height="60" as="geometry"/></mxCell>
+        <mxCell id="risk-title" value="RISKS" style="text;html=1;align=center;fontSize=20;fontStyle=1;fontColor=#C62828;" vertex="1" parent="problem"><mxGeometry x="175" y="345" width="170" height="35" as="geometry"/></mxCell>
+        <mxCell id="risks" value="• Shared permissions&lt;br&gt;• Large blast radius&lt;br&gt;• Mixed billing&lt;br&gt;• Difficult governance" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEBEE;strokeColor=#C62828;fontSize=18;align=left;spacingLeft=22;verticalAlign=middle;" vertex="1" parent="problem"><mxGeometry x="65" y="395" width="390" height="170" as="geometry"/></mxCell>
+
+        <mxCell id="arrow-solution" value="SEPARATE WORKLOADS" style="shape=flexArrow;endArrow=classic;html=1;rounded=1;fillColor=#006B5E;strokeColor=#004D40;fontColor=#FFFFFF;fontStyle=1;fontSize=14;" vertex="1" parent="1"><mxGeometry x="590" y="370" width="160" height="65" as="geometry"/></mxCell>
+
+        <mxCell id="org" value="AWS ORGANIZATION" style="swimlane;html=1;rounded=1;startSize=55;fillColor=#F4F8FF;strokeColor=#1F5E9C;strokeWidth=3;fontSize=24;fontStyle=1;fontColor=#123A63;" vertex="1" parent="1">
+          <mxGeometry x="780" y="100" width="980" height="900" as="geometry"/>
+        </mxCell>
+        <mxCell id="root" value="ROOT" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#172B4D;strokeColor=#172B4D;fontColor=#FFFFFF;fontSize=20;fontStyle=1;" vertex="1" parent="org"><mxGeometry x="390" y="80" width="200" height="60" as="geometry"/></mxCell>
+
+        <mxCell id="mgmt" value="CloudAdhar-Management" style="swimlane;html=1;rounded=1;startSize=42;fillColor=#E8F4FD;strokeColor=#1F5E9C;strokeWidth=2;fontSize=18;fontStyle=1;" vertex="1" parent="org"><mxGeometry x="40" y="210" width="400" height="255" as="geometry"/></mxCell>
+        <mxCell id="mgmt-duties" value="• Organizations administration&lt;br&gt;• IAM Identity Center administration&lt;br&gt;• Consolidated billing" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#5B9BD5;fontSize=16;align=left;spacingLeft=16;verticalAlign=middle;" vertex="1" parent="mgmt"><mxGeometry x="25" y="75" width="350" height="140" as="geometry"/></mxCell>
+
+        <mxCell id="ou" value="Dev-Env OU" style="swimlane;html=1;rounded=1;startSize=42;fillColor=#E8F7F1;strokeColor=#00836D;strokeWidth=3;fontSize=20;fontStyle=1;fontColor=#005B4D;" vertex="1" parent="org"><mxGeometry x="520" y="210" width="420" height="330" as="geometry"/></mxCell>
+        <mxCell id="scp" value="SERVICE CONTROL POLICY (SCP)&lt;br&gt;&lt;b&gt;Explicit Deny: s3:CreateBucket&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF3CD;strokeColor=#D39E00;strokeWidth=2;fontSize=16;fontColor=#664D03;" vertex="1" parent="ou"><mxGeometry x="35" y="75" width="350" height="95" as="geometry"/></mxCell>
+        <mxCell id="dev-account" value="CloudAdhar-Dev&lt;br&gt;&lt;font style=&quot;font-size:13px&quot;&gt;Member account — after-SCP state&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#00836D;strokeWidth=2;fontSize=19;fontStyle=1;" vertex="1" parent="ou"><mxGeometry x="70" y="210" width="280" height="80" as="geometry"/></mxCell>
+
+        <mxCell id="before" value="BEFORE SCP&lt;br&gt;CloudAdhar-Dev is under Root&lt;br&gt;and outside Dev-Env OU" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 8;fillColor=#FFF4F1;strokeColor=#C62828;strokeWidth=2;fontSize=15;fontColor=#8E1515;" vertex="1" parent="org"><mxGeometry x="40" y="515" width="310" height="100" as="geometry"/></mxCell>
+        <mxCell id="move" value="Move account into OU" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;strokeColor=#C62828;strokeWidth=2;endArrow=block;endFill=1;fontSize=14;fontStyle=1;" edge="1" parent="org" source="before" target="dev-account"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="identity" value="IAM IDENTITY CENTER" style="swimlane;html=1;rounded=1;startSize=42;fillColor=#F3E8FF;strokeColor=#7B3FB2;strokeWidth=2;fontSize=19;fontStyle=1;fontColor=#54267C;" vertex="1" parent="org"><mxGeometry x="390" y="625" width="550" height="220" as="geometry"/></mxCell>
+        <mxCell id="user" value="User&lt;br&gt;&lt;b&gt;cloudadhar-demo&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#7B3FB2;fontSize=15;" vertex="1" parent="identity"><mxGeometry x="25" y="80" width="145" height="75" as="geometry"/></mxCell>
+        <mxCell id="permset" value="Permission Set&lt;br&gt;&lt;b&gt;CloudAdhar-Admin&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#7B3FB2;fontSize=15;" vertex="1" parent="identity"><mxGeometry x="210" y="80" width="165" height="75" as="geometry"/></mxCell>
+        <mxCell id="sts" value="Temporary&lt;br&gt;&lt;b&gt;STS session&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#7B3FB2;fontSize=15;" vertex="1" parent="identity"><mxGeometry x="415" y="80" width="115" height="75" as="geometry"/></mxCell>
+        <mxCell id="u-p" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7B3FB2;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="identity" source="user" target="permset"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p-s" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7B3FB2;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="identity" source="permset" target="sts"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="sts-account" value="Temporary access to member account" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7B3FB2;strokeWidth=3;endArrow=block;endFill=1;fontSize=14;fontStyle=1;" edge="1" parent="org" source="sts" target="dev-account"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="root-mgmt" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1F5E9C;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="org" source="root" target="mgmt"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="root-ou" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#00836D;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="org" source="root" target="ou"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="billing" value="Consolidated billing" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;strokeColor=#1F5E9C;strokeWidth=2;endArrow=block;endFill=1;fontSize=14;fontStyle=1;" edge="1" parent="org" source="ou" target="mgmt"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="footer" value="Key rule: Permission Set ALLOW + SCP explicit DENY = DENY" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#172B4D;strokeColor=#172B4D;fontColor=#FFFFFF;fontSize=18;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="780" y="1025" width="980" height="60" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
